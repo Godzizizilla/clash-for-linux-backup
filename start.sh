@@ -3,6 +3,25 @@
 # 加载系统函数库(Only for RHEL Linux)
 # [ -f /etc/init.d/functions ] && source /etc/init.d/functions
 
+#################### 环境变量控制 ####################
+
+# 询问是否需要临时取消环境变量
+read -p "是否需要临时取消环境变量？(y/n): " unset_env
+
+if [[ $unset_env =~ ^[Yy]$ ]]; then
+    echo "正在清除环境变量..."
+    # 临时取消环境变量
+    unset http_proxy
+    unset https_proxy
+    unset no_proxy
+    unset HTTP_PROXY
+    unset HTTPS_PROXY
+    unset NO_PROXY
+    echo -e "\033[32m[√] 环境变量已清除\033[0m"
+else
+    echo -e "\033[33m[!] 保持当前环境变量不变\033[0m"
+fi
+
 #################### 脚本初始化任务 ####################
 
 # 获取脚本工作目录绝对路径
@@ -85,15 +104,6 @@ if [[ -z "$CpuArch" ]]; then
 fi
 
 export CpuArch=$CpuArch
-
-## 临时取消环境变量
-unset http_proxy
-unset https_proxy
-unset no_proxy
-unset HTTP_PROXY
-unset HTTPS_PROXY
-unset NO_PROXY
-
 
 ## Clash 订阅地址检测及配置文件下载
 # 检查url是否有效
@@ -209,26 +219,7 @@ proxy_off(){
 	echo -e "\033[31m[×] 已关闭代理\033[0m"
 }
 EOF
-echo -e "     く__,.ヘヽ.        /  ,ー､ 〉"
-echo -e "           ＼ ', !-─‐-i  /  /´"
-echo -e "          ／｀ｰ'       L/／｀ヽ､"
-echo -e "         /   ／,   /|   ,   ,       ',"
-echo -e "        ｲ   / /-‐/  ｉ  L_ ﾊ ヽ!   i"
-echo -e "        ﾚ ﾍ 7ｲ｀ﾄ   ﾚ'ｧ-ﾄ､!ハ|   |"
-echo -e "          !,/7 '0'     ´0iソ|    |"
-echo -e "          |.从     _     ,,,, / |./    |"
-echo -e "          ﾚ'| i＞.､,,__  _,.イ /   .i   |"
-echo -e "           ﾚ'| | / k_７_/ﾚ'ヽ,  ﾊ.  |"
-echo -e "             | |/i 〈|/   i  ,.ﾍ |  i  |"
-echo -e "            .|/ /  ｉ：    ﾍ!    ＼  |"
-echo -e "             kヽ>､ﾊ    _,.ﾍ､    /､!"
-echo -e "             !'〈//｀Ｔ´', ＼ ｀'7'ｰr'"
-echo -e "             ﾚ'ヽL__|___i,___,ンﾚ|ノ"
-echo -e "                  ﾄ-,/  |___./"
-echo -e "                  'ｰ'    !_,.:"
-echo -e "本项目完全免费，若你是收费买的，恭喜您，您被骗了！"
-echo -e "项目地址：https://github.com/Elegycloud/clash-for-linux-backup"
-echo -e "项目随时会寄，且行且珍惜！"
+
 echo -e "请执行以下命令加载环境变量: source /etc/profile.d/clash.sh\n"
 echo -e "请执行以下命令开启系统代理: proxy_on\n"
 echo -e "若要临时关闭系统代理，请执行: proxy_off\n"
